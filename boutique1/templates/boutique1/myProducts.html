@@ -1,0 +1,56 @@
+{% extends 'boutique1/base.html' %}
+{% block title %}Produits{% endblock %}
+{% block produits_active %}active{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+
+    <div class="row"><h2>&nbsp; Tous les produits</h2></div>
+
+    <div class="row">
+
+        <div class="col-sm-12">
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Nom produit</th>
+                                <th>Prix</th>
+                                <th>Description</th>
+                                <th>Image Produit</th>
+                                <th>Boutique</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in product_list %}
+                                <tr>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.price }}</td>
+                                    <td>{{ product.description }}</td>
+                                    <td>
+                                        <span href="{% url 'boutique1:shopDetails' product.id %}">
+                                            <img src="{{ product.principal_picture.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
+                                        </span>
+                                        <a href="{% url 'boutique1:prodDetails' product.shop.id product.id %}">{{ product.name }}</a>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'boutique1:shopDetails' product.shop.id %}">
+                                            <img src="{{ product.shop.logo.url }}" class="img-responsive" style="width: 20px; float: left; margin-right: 10px;" />
+                                        </a>
+                                        <a href="{% url 'boutique1:shopDetails' product.shop.id %}">{{ product.shop.name }}</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

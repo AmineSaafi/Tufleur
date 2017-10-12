@@ -1,0 +1,132 @@
+{% load staticfiles %}
+{% comment %}<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>{% endcomment %}
+<link rel="stylesheet" href="{% static 'boutique1/jquery.mobile-1.4.5.min.css' %}">
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+
+<script type='text/javascript'>
+    $(document).ready(function () {
+        $('#radio-choice-h-2a-label').on('click', function () {
+            console.log('message')
+            $('#from1_30').hide();
+            $('#from1_31').show();
+        });
+        $('#radio-choice-h-2b-label').on('click', function () {
+            $('#from1_30').show();
+            $('#from1_31').hide();
+        });
+        $('#radio-choice-h-2c-label').on('click', function () {
+            console.log('message')
+            $('#from1_32').hide();
+            $('#from1_33').show();
+        });
+        $('#radio-choice-h-2d-label').on('click', function () {
+            $('#from1_32').show();
+            $('#from1_33').hide();
+        });
+    });
+
+</script>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-9">
+        {% comment %}<span class="text-danger small">{{ form.errors }}</span>{% endcomment %}
+    </div>
+    <label class="control-label col-sm-2">Title: </label>
+    <div class="col-sm-10">{{ form.title }}</div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+
+    </div>
+    <div class="">
+        <label class="control-label col-md-2" style="padding-top: 40px">Promotion Type: </label>
+        <div class="col-md-9">
+            <fieldset data-role="controlgroup" data-type="horizontal">
+                        <input type="radio" name="radio-choice-h-2" id="radio-choice-h-2b" value="off">
+                        <label for="radio-choice-h-2b" id="radio-choice-h-2b-label">Regular</label>
+                        <input type="radio" name="radio-choice-h-2" id="radio-choice-h-2a" value="on">
+                        <label for="radio-choice-h-2a" id="radio-choice-h-2a-label">Flash</label>
+                    
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+
+    </div>
+    <div class="">
+        <label class="control-label col-md-2" style="padding-top: 40px">Promotion For: </label>
+        <div class="col-md-9">
+            <fieldset data-role="controlgroup" data-type="horizontal">
+                        <input type="radio" name="radio-choice-h-1" id="radio-choice-h-2d" value="off"
+                               checked="checked">
+                        <label for="radio-choice-h-2d" id="radio-choice-h-2d-label">Product</label>
+                        <input type="radio" name="radio-choice-h-1" id="radio-choice-h-2c" value="on">
+                        <label for="radio-choice-h-2c" id="radio-choice-h-2c-label">Collection</label>
+                    
+            </fieldset>
+        </div>
+    </div>
+</div>
+
+<div class="form-group" id="from1_32">
+    <div class="col-sm-offset-2 col-sm-10">
+
+    </div>
+    <label class="control-label col-sm-2">Product: </label>
+    <div class="col-sm-10">{{ form.product }}</div>
+</div>
+
+<div class="form-group" id="from1_33">
+    <div class="col-sm-offset-2 col-sm-10">
+
+    </div>
+    <label class="control-label col-sm-2">Collection: </label>
+    <div class="col-sm-10" style="overflow: auto;max-height: 270px">{{ form.collection }}</div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+
+    </div>
+    <label class="control-label col-sm-2">Discount (%): </label>
+    <div class="col-sm-10">
+        <input type="range" name="slider-fill" id="slider-fill" value="0" min="0" max="80" step="1"
+               data-highlight="true">
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+
+    </div>
+    <label for="date" class="control-label col-sm-2">Start time: </label>
+    <div class="col-sm-10">
+        <input type="date" name="start_time" id="date" value="{{ form.start_time.value }}"/>
+    </div>
+</div>
+
+<div class="form-group" id="from1_30">
+    <div class="col-sm-offset-2 col-sm-10">
+
+    </div>
+    <label for="date" class="control-label col-sm-2">End time: </label>
+    <div class="col-sm-10">
+        <input type="date" name="end_time" id="date" value="{{ form.end_time.value }}"/>
+    </div>
+</div>
+<div class="form-group" id="from1_31">
+    <div class="col-sm-offset-2 col-sm-10">
+
+    </div>
+    <label for="number-pattern" class="control-label col-sm-2">Duration (Hours): </label>
+    <div class="col-sm-10">
+        <input type="range" name="slider-fill" id="slider-fill" value="0" min="0" max="24" step="1"
+               data-highlight="true">
+    </div>
+</div>

@@ -1,0 +1,23 @@
+{% extends 'boutique1/base.html' %}
+{% block body %}
+    <div class="panel panel-default">
+<div class="container" style="width : 400px;">  
+  <form id="contact" action="" method="post" enctype="multipart/form-data">
+    <h3>{{ form_name }}</h3>
+    {% csrf_token %}
+    {% if error_message %}
+        <p><strong>{{ error_message }}</strong></p>
+    {% endif %}
+    {% for field in form %}
+    <label class="col-2 col-form-label">{{ field.label_tag}}</label>
+    <fieldset>
+      {{field}}
+    </fieldset>
+    {% endfor %}
+    <fieldset style="margin-top: 10px;">
+      <button name="submit" type="submit" id="contact-submit" data-submit="...Sending">Submit</button></br></br>
+    </fieldset>
+  </form>
+</div>
+    </div>
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'boutique1/base.html' %}
+{% block title %}{{ prod }}{% endblock %}
+{% load staticfiles %}
+{% block body %}
+    <div class="container-fluid songs-container">
+        <a class="col-sm-0 col-lg-0">
+            <a href="{% url 'boutique1:myShops' %}">
+                <button type="submit" class="btn btn-success btn-lg float-left">View My Shop</button>
+            </a>
+        </a>
+    </div>
+    <div class="row">
+        <!-- Left Album Info -->
+            <div class="col-sm-4 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <a href="{% url 'boutique1:shopDetails' shop.id %}">
+                            {% if shop.logo %}
+                                <img src="{{ shop.logo.url }}" class="img-responsive"
+                                     style="width: 350px; height: 400px">
+                            {% else %}
+                                <h3>Image not found</h3>
+                            {% endif %}
+                        </a>
+                        <h1>{{ shop.name }} - {{ shop.owner.user.username }}</h1>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Details:</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Owner:</td>
+                                <td>{{ shop.owner.user.username }}</td>
+                            </tr>
+                            <tr>
+                                <td>Shop name:</td>
+                                <td>{{ shop.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Description:</td>
+                                <td>{{ shop.description }}</td>
+                            </tr>
+                            <tr>
+                                <td>Address:</td>
+                                <td>{{ shop.address }}</td>
+                            </tr>
+                            <tr>
+                                <td>Create date:</td>
+                                <td>{{ shop.create_date }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        <div class="col-sm-2 col-md-1"></div>
+        <div class="col-sm-2 col-md-8">
+            {% if header %}
+                <h3>{{ header }}</h3> <a href="{% url 'boutique1:discover' %}">Cancel filter</a>
+            {% else %}
+                <h3>All products</h3>
+            {% endif %}
+            {% for prod in prods %}
+                {% if forloop.first %}
+                    <div class="row">
+                {% endif %}
+            <div class="col-md-3">
+                <div class="thumbnail">
+                    <a href="{% url 'boutique1:prodDetails' prod.shop.id prod.id %}">
+                        <img src="{{ prod.principal_picture.url }}" class="img-responsive"
+                             style="width: 220px; height: 180px">
+                    </a>
+                    <div class="caption">
+                        <h3>
+                            <center>{{ prod.name }} - {{ prod.price }}</center>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 %}</div>
+                <div class="row">
+            {% endif %}
+            {% if forloop.last %}
+                </div>
+            {% endif %}
+            {% endfor %}
+
+            <!-- PAGINATION -->
+            {% if prods.has_other_pages %}
+                <ul class="pagination">
+                    {% if prods.has_previous %}
+                        <li><a href="?page=
+                                {{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><span>&laquo;</span></li>
+                    {% endif %}
+                    {% for i in prods.paginator.page_range %}
+                        {% if products.number == i %}
+                            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li><a href="?page=
+                                    {{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if products.has_next %}
+                        <li><a href="?page=
+                                {{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="disabled"><span>&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="{% static 'boutique1/js/bootstrap-slider.min.js' %}"></script>
+    <script src="{% static 'boutique1/js/bootstrap-slider.js' %}"></script>
+
+{% endblock %}

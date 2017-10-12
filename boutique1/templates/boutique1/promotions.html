@@ -1,0 +1,167 @@
+{% extends 'boutique1/base.html' %}
+{% load staticfiles %}
+{% block title %}Collections{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+<div class="col-sm-12">
+{#        <h2>{{ user.username }}'s Shops</h2></div>#}
+    <div class="row">
+
+        <!-- Left Album Info -->
+            <div class="col-sm-4 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <a href="{% url 'boutique1:shopDetails' shop.id %}">
+                            {% if shop.logo %}
+                                <img src="{{ shop.logo.url }}" class="img-responsive"
+                                     style="width: 350px; height: 400px">
+                            {% else %}
+                                <h3>Image not found</h3>
+                            {% endif %}
+                        </a>
+                        <h1>{{ shop.name }} - {{ shop.owner.user.username }}</h1>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Details:</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Owner:</td>
+                                <td>{{ shop.owner.user.username }}</td>
+                            </tr>
+                            <tr>
+                                <td>Shop name:</td>
+                                <td>{{ shop.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Description:</td>
+                                <td>{{ shop.description }}</td>
+                            </tr>
+                            <tr>
+                                <td>Address:</td>
+                                <td>{{ shop.address }}</td>
+                            </tr>
+                            <tr>
+                                <td>Create date:</td>
+                                <td>{{ shop.create_date }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Right Song Info -->
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation" ><a href="{% url 'boutique1:shopDetails' shop.id %}">See All</a></li>
+                <li role="presentation" class="active"><a href="{% url 'boutique1:promotions' shop.id %}">My Promotions</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                         <h3>My Promotions</h3>
+                    </div>
+                    <div class="col-sm-3 pull-right">
+                        <form action="{% url 'boutique1:create_promotion' shop.id %}" method="" style="display: inline;">
+                            <button class="btn btn-xs" style="color: green;height: 40px;width: 200px">
+                                <span class="glyphicon glyphicon-plus-sign"></span> New Promotion
+                            </button>
+                        </form>
+{#                            <a data-role="none" data-ajax="false" href="{% url 'eshop:create_product' shop.id %}" style="color: green;height: 40px;width: 130px;border: #d3ced5" role="button">#}
+{#                               <span class="glyphicon glyphicon-plus-sign"></span><strong> Add Product</strong>#}
+{#                            </a>#}
+{#                        <h3>add prod</h3>#}
+                    </div>
+                </div>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Promotion Image</th>
+                            <th>Title</th>
+                            <th>Start time</th>
+                            <th>End time</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for promotion in promotions %}
+                            <tr>
+                                <td>
+                                    {%  if promotion.collection.image_collection %}
+                                        <a href="{% url 'boutique1:collection_detail' shop.id promotion.collection.id %}">
+                                        <img src="{{ promotion.collection.image_collection.url }}" class="img-responsive" style="width: 50px; float: left; margin-right: 10px;"></a>
+
+                                    {% elif promotion.product.principal_picture %}
+                                        <a href="{% url 'boutique1:prodDetails' shop.id promotion.product.id %}">
+                                        <img src="{{ promotion.product.principal_picture.url }}" class="img-responsive" style="width: 50px; float: left; margin-right: 10px;"></a>
+                                    {% else %}
+
+
+                                        <img src="{%  static 'boutique1/images/no-image.jpg' %}" width="100" height="100"></a>
+
+                                    {% endif %}
+                                </td>
+                                <td><h4><a href="{% url 'boutique1:promotion_detail' shop.id promotion.id %}">{{ promotion.title }}</a> </h4></td>
+                                <td><h4>{{ promotion.start_time }}</h4></td>
+                                <td><h4>{{ promotion.end_time }}</h4></td>
+                                <td></td>
+
+{#                                <td width="8">#}
+{#                                    <form action="{% url 'collection:collection_detail' shop.id collection.id %}" method="get" style="display: inline;">#}
+{#                                        {% csrf_token %}#}
+{#                                        <button style="color: cornflowerblue;height: 35px"  type="submit" class="btn btn-xs">#}
+{#                                            <span class="glyphicon glyphicon-eye-open small" style="vertical-align:top"></span>#}
+{#                                        </button>#}
+{#                                    </form>#}
+{#                                </td>#}
+                                <td>
+                                    <form action="{% url 'boutique1:promotion_detail' shop.id promotion.id %}" method="get" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-info btn-xs">
+                                            <span class="glyphicon glyphicon-info-sign"></span> Details
+                                        </button>
+                                    </form>
+
+                                    <form action="{% url 'boutique1:edit_promotion' shop.id promotion.id %}" method="get" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-warning btn-xs">
+                                            <span class="glyphicon glyphicon-edit"></span> Edit
+                                        </button>
+                                    </form>
+
+                                    <form action="{% url 'boutique1:delete_promotion' shop.id promotion.id %}" method="post" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button onclick="return confirm('Are you sure you want to delete this?')" type="submit" class="btn btn-danger btn-xs">
+                                             <span class="glyphicon glyphicon-remove"></span> Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

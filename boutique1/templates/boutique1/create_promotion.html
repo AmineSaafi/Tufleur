@@ -1,0 +1,97 @@
+{% extends 'boutique1/base.html' %}
+{% block title %}Add a New Promotion{% endblock %}
+
+{% block body %}
+<div class="container-fluid songs-container">
+<div class="col-sm-12">
+
+    <div class="row">
+
+        <!-- Left Album Info -->
+            <div class="col-sm-4 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <a href="{% url 'boutique1:shopDetails' shop.id %}">
+                            {% if shop.logo %}
+                                <img src="{{ shop.logo.url }}" class="img-responsive"
+                                     style="width: 350px; height: 400px">
+                            {% else %}
+                                <h3>Image not found</h3>
+                            {% endif %}
+                        </a>
+                        <h1>{{ shop.name }} - {{ shop.owner.user.username }}</h1>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Details:</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Owner:</td>
+                                <td>{{ shop.owner.user.username }}</td>
+                            </tr>
+                            <tr>
+                                <td>Shop name:</td>
+                                <td>{{ shop.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Description:</td>
+                                <td>{{ shop.description }}</td>
+                            </tr>
+                            <tr>
+                                <td>Address:</td>
+                                <td>{{ shop.address }}</td>
+                            </tr>
+                            <tr>
+                                <td>Create date:</td>
+                                <td>{{ shop.create_date }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Right Song Info -->
+        <div class="col-sm-8 col-md-9">
+
+            <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                <li role="presentation"><a href="{% url 'boutique1:shopDetails' shop.id %}">See All</a></li>
+                <li role="presentation" class="active"><a href="{% url 'boutique1:create_promotion' shop.id %}">Add new Album</a></li>
+            </ul>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Add a New Promotion</h3>
+                    {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                    {% endif %}
+                    <form border="1" data-ajax="true" class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" name="album" value="{{ shop }}">
+                        {% include 'boutique1/form_template.html' %}
+                        <input type="hidden" name="tz" id="tz" value="" />
+                        <script> var d = new Date();
+                        var n = d.getTimezoneOffset();
+                        z=-(n/60);
+                        var elem=document.getElementById("tz");
+                        elem.value =n;
+                        </script>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-success">Submit</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
+

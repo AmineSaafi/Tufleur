@@ -1,0 +1,147 @@
+{% extends 'boutique1/base.html' %}
+{% block title %}{{ prod }}{% endblock %}
+{% load staticfiles %}
+{% block body %}
+    <div class="container-fluid songs-container">
+
+
+        <div class="row">
+            <!-- Left Album Info -->
+            <div class="col-sm-8 col-lg-5">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        {% if prod.principal_picture %}
+                            <img src="{{ prod.principal_picture.url }}" class="img-responsive center-block" width="300"
+                                 height="300">
+                        {% else %}
+                            <img src="{% static 'boutique1/images/no-image.jpg' %}" class="img-responsive center-block"
+                                 width="300" height="300"></a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row center-block">
+                    {% for img in prod.picture_set.all %}
+                        {% if img.name %}
+                            {% if img.name.url %}
+                                <div class="col-md-4">
+                                    <img class="img-responsive" src={{ img.name.url }} alt=""/>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <!-- Right Song Info -->
+
+            {#        <div class="col-sm-8 col-md-7 right">#}
+            {##}
+            {#            <ul class="nav nav-pills" style="margin-bottom: 10px;">#}
+            {#                <li role="presentation" class="active"><a href="{% url 'eshop:detail' shop.id %}">View All</a></li>#}
+            {#            </ul>#}
+            {#    </div>#}
+            <div class="col-sm-8 col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <div class="u-form-group">
+                            <span>Product Details</span>
+                            <a href="{% url 'boutique1:shopSProducts' shop.id %}">
+                                <button type="submit" class="float-xl-right">Shop's Products</button>
+                            </a>
+                        </div>
+
+
+                        {% if error_message %}
+                            <p><strong>{{ error_message }}</strong></p>
+                        {% endif %}
+
+                        <table class="table">
+                            <thead>
+                            <td>
+                                {% if request.user == shop.owner.user %}
+                                    {% comment %}Activate button{% endcomment %}
+                                    <a href="{% url 'boutique1:activate_product' shop.id prod.id %}"
+                                       class="btn btn-default btn-sm" role="button">
+                                        <span class="glyphicon glyphicon-ok-circle {% if prod.is_active %}glyphicon-ban-circle{% endif %}"></span>
+                                    </a>
+                                    {% comment %}Duplicate button{% endcomment %}
+                                    <a href="{% url 'boutique1:duplicate_product' shop.id prod.id %}"
+                                       class="btn btn-default btn-sm" role="button">
+                                        <span class="glyphicon glyphicon-duplicate"></span>
+                                    </a>
+                                    {% comment %}Edit button{% endcomment %}
+                                    <a href="{% url 'boutique1:edit_product' shop.id prod.id %}"
+                                       class="btn btn-default btn-sm" role="button">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </a>
+                                    {% comment %}Delete button{% endcomment %}
+                                    <a href="{% url 'boutique1:delete_product' shop.id prod.id %}"
+                                       class="btn btn-default btn-sm" role="button"
+                                       onclick="return confirm('Are you sure you want to delete this item?');">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                {% endif %}
+                            </td>
+                            </thead>
+
+                            <tbody>
+                            <tr>
+                                <th><h2>Product Details</h2></th>
+                                <th>
+                                    <div class="panel-body">
+                                        <button type="submit" class="">filter by type</button>
+                                    </div>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th><h3>Title </h3></th>
+                                <th><h3>{{ prod.name }}</h3></th>
+                            </tr>
+                            <tr>
+                                <th><h3>Price </h3></th>
+                                <th><h3>{{ prod.price }} $</h3></th>
+                            </tr>
+                            <tr>
+                                <th><h3>Category </h3></th>
+                                <th><h3>{{ prod.category }}</h3></th>
+                            </tr>
+                            <tr>
+                                <th><h3>Quantity </h3></th>
+                                <th><h3>{{ prod.quantity }}</h3></th>
+                            </tr>
+                            <tr>
+                                <th><h3>Description </h3></th>
+                                <th><h3>{{ prod.description }}</h3></th>
+                            </tr>
+                            </tbody>
+                            {#                        <tbody>#}
+                            {#                        {% for prod in shop.product_set.all %}#}
+                            {#                            <tr>#}
+                            {#                                <td>{%  if prod.principal_picture %}#}
+                            {#                                    <img src="{{ prod.principal_picture.url }}" class="img-responsive" width="150" height="150">#}
+                            {#                                    {% endif %}#}
+                            {#                                </td>#}
+                            {#                                <td>{{ prod.name }}</td>#}
+                            {#                                <td>{{ prod.price }}$</td>#}
+                            {#                                <td>{{ prod.category }}</td>#}
+                            {#                                <td>{{ prod.description }}</td>#}
+                            {#                                <td>#}
+                            {#                                    <a href="{% url 'eshop:favorite' prod.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if prod.is_favorite %}active{% endif %}"></span></a>#}
+                            {#                                </td>#}
+                            {##}
+                            {#                            </tr>#}
+                            {#                        {% endfor %}#}
+                            {#                        </tbody>#}
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}

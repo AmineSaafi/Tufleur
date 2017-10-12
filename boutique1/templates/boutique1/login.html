@@ -1,0 +1,63 @@
+{% extends 'boutique1/base_visitor.html' %}
+{% block title %}Log In{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                {% if error_message %}
+                        <p><strong>{{ error_message }}</strong></p>
+                {% endif %}
+                <div class="login-box">
+                    <div class="lb-header">
+                        <a href="{% url 'boutique1:login_user' %}" class="active" id="login-box-link">Login</a>
+                        <a href="{% url 'boutique1:register' %}" id="signup-box-link">Sign Up</a>
+                    </div>
+                    <div class="social-login">
+                        <a href="#">
+                            <i class="fa fa-facebook fa-lg"></i>
+                            Login in with facebook
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-google-plus fa-lg"></i>
+                            log in with Google
+                        </a>
+                    </div>
+                    <form class="email-login" role="form" action="{% url 'boutique1:login_user' %}" method="post">
+                        {% csrf_token %}
+                        <div class="u-form-group">
+                            <input type="text" placeholder="Username" name="username"/>
+                        </div>
+                        <div class="u-form-group">
+                            <input type="password" placeholder="Password" name="password"/>
+                        </div>
+                        <div class="u-form-group">
+                            <button>Log in</button>
+                        </div>
+                        <div class="u-form-group">
+                            <a href="{% url 'boutique1:register' %}" class="forgot-password">Forgot password?</a>
+                        </div>
+                    </form>
+                    <form class="email-signup" action="{% url 'boutique1:register' %}" method="post">
+                        {% csrf_token %}
+                        <div class="u-form-group">
+                            <input type="text" placeholder="username" name="username"/>
+                        </div>
+                        <div class="u-form-group">
+                            <input type="password" placeholder="Password" name="password"/>
+                        </div>
+                        <div class="u-form-group">
+                            <input type="password" placeholder="Confirm Password" name="password"/>
+                        </div>
+                        <div class="u-form-group">
+                            <button>Sign Up</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src=""></script>
+{% endblock %}

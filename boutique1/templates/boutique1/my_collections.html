@@ -1,0 +1,188 @@
+{% extends 'boutique1/base.html' %}
+{% block title %}{{ shop }}{% endblock %}
+{% block boutiques_active %}active{% endblock %}
+
+{% block body %}
+    <div class="container-fluid songs-container">
+
+        <div class="row">
+
+            <!-- Left Album Info -->
+            <div class="col-sm-4 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <a href="{% url 'boutique1:shopDetails' shop.id %}">
+                            {% if shop.logo %}
+                                <img src="{{ shop.logo.url }}" class="img-responsive"
+                                     style="width: 350px; height: 400px">
+                            {% else %}
+                                <h3>Image not found</h3>
+                            {% endif %}
+                        </a>
+                        <h1>{{ shop.name }} - {{ shop.owner.user.username }}</h1>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Details:</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Owner:</td>
+                                <td>{{ shop.owner.user.username }}</td>
+                            </tr>
+                            <tr>
+                                <td>Shop name:</td>
+                                <td>{{ shop.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Description:</td>
+                                <td>{{ shop.description }}</td>
+                            </tr>
+                            <tr>
+                                <td>Address:</td>
+                                <td>{{ shop.address }}</td>
+                            </tr>
+                            <tr>
+                                <td>Create date:</td>
+                                <td>{{ shop.create_date }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Product Info -->
+            <div class="col-sm-8 col-md-9">
+
+                <ul class="nav nav-pills" style="margin-bottom: 10px;">
+                    <li role="presentation"><a href="{% url 'boutique1:shopDetails' shop.id %}">See All
+                        </a></li>
+                    <li role="presentation" class="active"><a href="{% url 'boutique1:myCollections' shop.id %}">My Collections</a>
+                    </li>
+                </ul>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+                        <div class="col-sm-3 pull-right">
+                        <form action="{% url 'boutique1:create_collection' shop.id %}" method="" style="display: inline;">
+                            <button class="btn btn-xs" style="color: green;height: 40px;width: 200px">
+                                <span class="glyphicon glyphicon-plus-sign"></span> Add Collection
+                            </button>
+                        </form>
+                    </div>
+
+                        <h3>My Collecions</h3>
+
+                        {% if error_message %}
+                            <p><strong>{{ error_message }}</strong></p>
+                        {% endif %}
+
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Colection name</th>
+                                <th>Description</th>
+                                <th>Collection picture</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for c in collection.all %}
+                                <tr>
+                                    <td>{{ c.title }}</td>
+                                    <td>{{ c.description }}</td>
+                                    <td>
+                                        <a href="{% url 'boutique1:collection_detail' shop.id c.id %}">
+                                            <img src="{{ c.image_collection.url }}" class="img-responsive"
+                                                 style="width: 50px; float: left; margin-right: 10px;"/>
+                                        </a>
+                                        <a href="{% url 'boutique1:collection_detail' shop.id c.id %}">{{ c.title }}</a>
+                                    </td>
+                                    <td>
+                                        {% if c.is_active %}
+                                            <p class="list-group-item-text">
+                                                <span class="label label-success">Active</span>
+                                            </p>
+                                        {% else %}
+                                            <p class="list-group-item-text">
+                                                <span class="label label-danger">Not Active</span>
+                                            </p>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <form action="{% url 'boutique1:delete_collection' shop.id c.id %}"
+                                              method="POST" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="product_id" value="{{ c.id }}"/>
+                                            <button type="submit" class="btn btn-danger btn-xs" name="remove_levels"
+                                                    value="delete"
+                                                    onclick="return confirm('Are you sure you want to delete this item?');">
+                                                <span class="glyphicon glyphicon-remove"></span> Delete
+                                            </button>
+                                        </form>
+                                        {% comment %}<form action="{% url 'boutique1:duplicate_product' shop.id c.id %}"
+                                              method="GET" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="product_id" value="{{ c.id }}"/>
+                                            <button type="submit" class="btn btn-primary btn-xs" name="remove_levels"
+                                                    value="delete">
+                                                <span class="glyphicon glyphicon-duplicate"></span> Duplicate
+                                            </button>
+                                        </form>{% endcomment %}
+                                        <form action="{% url 'boutique1:edit_collection' shop.id c.id %}"
+                                              method="GET" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="produit_id" value="{{ c.id }}"/>
+                                            <button type="submit" class="btn btn-warning btn-xs" name="remove_levels"
+                                                    value="Edit">
+                                                <span class="glyphicon glyphicon-edit"></span> Edit
+                                            </button>
+                                        </form>
+
+                                        <form action="{% url 'boutique1:collection_detail' shop.id c.id %}"
+                                              method="GET" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="product_id" value="{{ c.id }}"/>
+                                            <button type="submit" class="btn btn-info btn-xs" name="remove_levels"
+                                                    value="delete">
+                                                <span class="glyphicon glyphicon-info-sign"></span> Details
+                                            </button>
+                                        </form>
+
+                                        <form action="{% url 'boutique1:activate_collection' shop.id c.id %}"
+                                              method="GET" style="display: inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="coll_id" value="{{ c.id }}"/>
+                                            {% if c.is_active %}
+                                                <button type="submit" class="btn btn-danger btn-xs" name="remove_levels"
+                                                        value="delete">
+                                                    <span class="glyphicon glyphicon-ban-circle"></span>
+                                                    Deactivate
+                                                </button>
+                                            {% else %}
+                                                <button type="submit" class="btn btn-success btn-xs"
+                                                        name="remove_levels"
+                                                        value="delete">
+                                                    <span class="glyphicon glyphicon-ok-circle "></span>
+                                                    Activte
+                                                </button>
+                                            {% endif %}
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+{% endblock %}

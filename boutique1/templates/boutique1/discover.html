@@ -1,0 +1,380 @@
+{% extends 'boutique1/base.html' %}
+{% block discover_active %}active{% endblock %}
+{% block title %}Discover{% endblock %}
+{% load staticfiles %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'boutique1/bootstrap-slider.min.css' %}">
+<link rel="stylesheet" href="{% static 'boutique1/bootstrap-slider.css' %}">
+
+
+{% block body %}
+<script src={% static 'boutique1/js/jquery.countdown.min.js' %}></script>
+<script type='text/javascript' src='http://code.jquery.com/jquery-1.10.2.min.js'></script>
+
+
+ <script>
+    function myFunction(p1, p2) {
+        return p1 * (100-p2)/100;
+    }
+
+    function myendtime(p1, p2) {
+        var date=new Date();
+
+        return p1 * (100-p2)/100;
+    }
+
+</script>
+
+
+<!-- CATEGORIES -->
+<div class="row">
+    <div class="col-sm-3 col-md-3">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>All categories:</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for category, value in counter %}
+                    <tr>
+                        <td><a href="{% url 'boutique1:discover_category' category.label %}?
+                                        {% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+                            {{ category.label }} <span class="badge">{{ value }}</span>
+                        </a></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                &nbsp;<h5><strong>
+                <center>Filter by price:</center>
+            </strong></h5>
+                <form method="GET" class="price-filter" action="{{ request.path }}" style="display: inline;">
+                    <!-- existing get parameters notably search -->
+                    {% for key, value in request.GET.items %}
+                    {% if key != 'page' and key != 'min' and key != 'max' %}
+                    <div class="u-form-group">
+                        <input type="hidden" name="{{ key }}" value="{{ value }}"/>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    <!---->
+                    {% comment %}------------------------------------------------------------------------------
+                    {%endcomment %}
+                    <form method="GET" class="price-filter" action="{{ request.path }}">
+                        <!-- existing get parameters notably search -->
+                        {% for key, value in request.GET.items %}
+                        {% if key != 'page' and key != 'min' and key != 'max' %}
+                        <div class="u-form-group">
+                            <input type="hidden" name="{{ key }}" value="{{ value }}"/>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% comment %} Filter by price interval: <b>€ 10</b> <input id="ex2" type="text" class="span2"
+                                                                                   value=""
+                                                                                   data-slider-min="10"
+                                                                                   data-slider-max="1000"
+                                                                                   data-slider-step="5"
+                                                                                   data-slider-value="[250,450]"/> <b>€
+                        1000</b>{% endcomment %}
+                        <div data-role="rangeslider">
+
+                            <input name="min" id="sliderLink" min="0" max="3000" value="0" type="hidden">
+                            <input name="max" id="sliderLink2" min="0" max="3000" value="3000" type="hidden">
+                        </div>
+
+                        {% comment %}
+                        <div class="u-form-group">
+                            <button type="submit" class="center-block">filter by price</button>
+                        </div>
+                        {% endcomment %}
+                    </form>
+
+                    {% comment %}------------------------------------------------------------------------------
+                    {%endcomment %}
+                    <!-- Widget Price Range-->
+                    <section class="widget widget-categories">
+                        {% comment %}<h3 class="widget-title">Price Range</h3>{% endcomment %}
+                        <form class="price-range-slider price-filter" action="{{ request.path }}" method="get"
+                              data-start-min="250" data-start-max="650"
+                              data-min="0" data-max="1000" data-step="1">
+                            {% for key, value in request.GET.items %}
+                            {% if key != 'page' and key != 'min' and key != 'max' %}
+                            <div class="u-form-group">
+                                <input type="hidden" name="{{ key }}" value="{{ value }}"/>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+
+                            <div class="ui-range-slider"></div>
+                            <footer class="ui-range-slider-footer">
+                                <div class="column">
+                                    {% comment %}
+                                    <button class="btn btn-outline-primary btn-sm align-right" type="submit">
+                                        Filter
+                                    </button>
+                                    {% endcomment %}
+                                </div>
+                                <div data-role="rangeslider">
+                                    <div class="u-form-group">
+                                        <div class="ui-range-values">
+                                            <div data-role="rangeslider" class="ui-range-value-min">$<span></span>
+                                                <input name="min" id="sliderLink" min="0" max="3000" value="0"
+                                                       type="hidden">
+                                            </div>
+                                            &nbsp;-&nbsp;
+                                            <div data-role="rangeslider" class="ui-range-value-max">$<span></span>
+                                                <input name="max" id="sliderLink2" min="0" max="3000" value="3000"
+                                                       type="hidden">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </footer>
+                            <br>
+                            <div class="u-form-group">
+                                <button type="submit" class="center-block">filter by price</button>
+                            </div>
+                        </form>
+
+                    </section>
+                    <!-- Widget Brand Filter-->
+                    {% comment %}------------------------------------------------------------------------------
+                    {%endcomment %}
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;
+                    <h5><strong>
+                        <center>&nbsp;Filter by product type:</center>
+                    </strong></h5>
+                    <form method="GET" class="product_type_filter" action="{{ request.path }}">
+                        <!-- existing get parameters notably search -->
+                        {% for key, value in request.GET.items %}
+                        {% if key != 'page' and key != 'product_type' %}
+                        <div class="u-form-group">
+                            <input type="hidden" name="{{ key }}" value="{{ value }}"/>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        <!---->
+                        <select name="product_type" class="center-block">
+                            <option value="HM">Hand Made</option>
+                            <option value="VTG">Vintage</option>
+                        </select>
+                        <br>
+                        <div class="u-form-group">
+                            <button type="submit" class="center-block">filter by type</button>
+                        </div>
+                    </form>
+                    &nbsp;&nbsp;&nbsp;
+                    &nbsp;
+                    <h5><strong>
+                        <center>&nbsp;Order by:</center>
+                    </strong></h5>
+                    <form method="GET" class="order" action="{{ request.path }}">
+                        <!-- existing get parameters notably search -->
+                        {% for key, value in request.GET.items %}
+                        {% if key != 'page' and key != 'ordering' %}
+                        <div class="u-form-group">
+                            <input type="hidden" name="{{ key }}" value="{{ value }}"/>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        <!---->
+                        <select name="ordering" class="center-block">
+                            <option value="recent">recent</option>
+                            <option value="price_asc">price ascending</option>
+                            <option value="price_desc">price descending</option>
+                        </select>
+                        <br>
+                        <div class="u-form-group">
+                            <button type="submit" class="center-block">Order Type</button>
+                        </div>
+                    </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCTS -->
+
+    <div class="col-sm-8 col-md-9">
+        {% if header %}
+        <h3>{{ header }}</h3> <a href="{% url 'boutique1:discover' %}">Cancel filter</a>
+        {% else %}
+        <h3>All products</h3>
+        {% endif %}
+
+
+        {% for product in products %}
+        {% if forloop.first %}
+        <div class="row">
+            {% endif %}
+            {% if product.en_promotion%}
+            {% for promotion in promotions %}
+            {% if promotion.product_id == product.id %}
+            <div class="col-md-3">
+                <div class="thumbnail">
+                    <a href="{% url 'boutique1:prodDetails' product.shop.id product.id %}">
+                        <img src="{{ product.principal_picture.url }}" class="img-responsive"
+                             style="width: 220px; height: 180px">
+                    </a>
+                    <div class="caption">
+                        <h3>
+                            <center>{{ product.name }} - {{ product.price }}</center>
+                            <h3>
+                                <center>promotion: %{{ promotion.discount_value }}</center>
+                            </h3>
+                            <!-- countdown    -->
+                            {% if promotion.promotion_type == "FLASH" %}
+                            <center><div id="getting-started{{ promotion.id }}{{ product.id }}" class="countdown mb-3"
+                                 data-date-time="{{ promotion.end_time.month }}/{{ promotion.end_time.day }}/{{ promotion.end_time.year }}">        <!--"8/30/2017 12:00:00"-->
+
+                                <div class="item">
+                                    <div id="h{{ promotion.id }}{{ product.id }}" class="hours">00</div>
+                                    <span class="hours_ref">Hours</span>
+                                </div>
+                                <div class="item">
+                                    <div id="m{{ promotion.id }}{{ product.id }}" class="minutes">00</div>
+                                    <span class="minutes_ref">Mins</span>
+                                </div>
+                                <div class="item">
+                                    <div id="s{{ promotion.id }}{{ product.id }}" class="seconds">00</div>
+                                    <span class="seconds_ref">Secs</span>
+                                </div>
+                                <script type="text/javascript">
+                                      $("#getting-started{{ promotion.id }}{{ product.id }}")
+                                      .countdown("{{ promotion.end_time.year }}/{{ promotion.end_time.month }}/{{ promotion.end_time.day }} {{ promotion.end_time.hour }}:{{ promotion.end_time.minute }}:{{ promotion.end_time.second }}", function(event) {
+                                        $("#h{{ promotion.id }}{{ product.id }}").text(
+                                          event.strftime('%H')
+                                        );
+                                          $("#m{{ promotion.id }}{{ product.id }}").text(
+                                          event.strftime('%M')
+                                        );
+                                          $("#s{{ promotion.id }}{{ product.id }}").text(
+                                          event.strftime('%S')
+                                          console.log('hello')
+                                        );
+                                      });
+                                </script>
+                            </div></center>
+
+
+                            {% endif %}
+                        </h3>
+                    </div>
+                </div>
+
+
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            {%else%}
+            <div class="col-md-3">
+                <div class="thumbnail">
+                    <a href="{% url 'boutique1:prodDetails' product.shop.id product.id %}">
+                        <img src="{{ product.principal_picture.url }}" class="img-responsive"
+                             style="width: 220px; height: 180px">
+                    </a>
+                    <div class="caption">
+                        <h3>
+                            <center>{{ product.name }} - {{ product.price }}</center>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            {%endif%}
+            {% if forloop.counter|divisibleby:3 %}
+        </div>
+        <div class="row">
+            {% endif %}
+            {% if forloop.last %}
+        </div>
+        {% endif %}
+        <!--<div class="product-buttons">
+                      <div class="toolbar">
+        <div class="inner">
+          <div class="tools">
+
+             <div class="account" data-toggle="tooltip" title="Whishlist"><a  href="{% url 'boutique1:my_categorys' %}"></a><i class="icon-heart"></i>
+              <ul class="toolbar-dropdown">
+
+                    {% for wc in wish_categorys %}
+                     <li><a href="{% url 'wishlist:addprod' wc.id produit.id %}">{{ wc.title }}</a></li>
+                     <li class="sub-menu-separator"></li>
+                    {% endfor %}
+              <li><a href="{% url 'boutique1:create_wish_category'%}">+add category</a></li>
+
+
+              </ul>
+            </div>
+          </div></div></div>
+                  &lt;!&ndash;  <button class=" btn btn-outline-secondary btn-sm btn-wishlist" data-toggle="tooltip" title="Whishlist"><i class="icon-heart"></i></button> &ndash;&gt;
+                    &lt;!&ndash; <button class="btn btn-outline-primary btn-sm" data-toast data-toast-type="success" data-toast-position="topRight" data-toast-icon="icon-circle-check" data-toast-title="Product" data-toast-message="successfuly added to cart!">Add to Cart</button>&ndash;&gt;
+
+                 </div>-->
+                
+
+        {% endfor %}
+
+
+        <!-- PAGINATION -->
+        {% if products.has_other_pages %}
+        <ul class="pagination">
+            {% if products.has_previous %}
+            <li><a href="?page=
+
+
+
+
+                                {{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo;</a>
+            </li>
+            {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in products.paginator.page_range %}
+            {% if products.number == i %}
+            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+            <li><a href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}=
+            {{ value }}{% endif %}{% endfor %}">{{ i }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+            <li><a href="?page=
+
+
+
+
+                                {{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&raquo;</a>
+            </li>
+            {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
+
+<script src="{% static 'boutique1/js/bootstrap-slider.min.js' %}"></script>
+<script src="{% static 'boutique1/js/bootstrap-slider.js' %}"></script>
+
+<script type='text/javascript' src='http://code.jquery.com/jquery-1.10.2.min.js'></script>
+<script src= "{% static 'boutique1/js/jquery.countdown.min.js' %}"></script>
+
+<script>
+function myFunction(p1, p2) {
+    return p1 * (100-p2)/100;
+}
+
+
+</script>
+
+
+
+
+{% endblock %}

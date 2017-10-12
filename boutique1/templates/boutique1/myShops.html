@@ -1,0 +1,98 @@
+{% extends 'boutique1/base.html' %}
+{% block boutiques_active %}active{% endblock %}
+{% block title %}My Shop{% endblock %}
+
+{% block body %}
+    <div class="albums-container container-fluid">
+
+        <!-- Boutiques -->
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>{{ user.username }}'s Shops</h3><br>
+            </div>
+            {% if shops %}
+                {% for shop in shops %}
+                    <div class="col-sm-4 col-lg-2">
+                        <div class="thumbnail">
+                            <a href="{% url 'boutique1:shopDetails' shop.id %}">
+                                <img src="{{ shop.logo.url }}" class="img-responsive" style="width: 220px; height: 180px">
+                            </a>
+                            <div class="caption">
+                                <h2>{{ shop.name }}</h2>
+
+                                <!-- View Details -->
+                                <a href="{% url 'boutique1:shopDetails' shop.id %}" class="btn btn-primary btn-sm"
+                                   role="button">Détails</a>
+
+                                <!-- Delete Shop -->
+                                <form action="{% url 'boutique1:delete_shop' shop.id %}" method="post"
+                                      style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="boutique_id" value="{{ shop.id }}"/>
+                                    <button type="submit" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-trash"></span>
+                                    </button>
+                                </form>
+
+                                <!-- Edit Shop -->
+                                <form action="{% url 'boutique1:edit_shop' shop.id %}" method="GET"
+                                      style="display: inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="boutique_id" value="{{ shop.id }}"/>
+                                    <button type="submit" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-edit"></span>
+                                    </button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% cycle '' '' '' '' '' '<div class="clearfix visible-lg"></div>' %}
+                {% endfor %}
+            {% else %}
+                <div class="col-sm-12">
+                    <br>
+                    <a href="{% url 'boutique1:create_shop' %}">
+                        <button type="button" class="btn btn-success">
+                            <span class="glyphicon glyphicon-plus"></span>&nbsp; Add Shop
+                        </button>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Recherche -->
+        {% if products %}
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3>Produits</h3>
+                </div>
+                <div class="col-sm-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Nom Produit</th>
+                                    <th>Prix Produit</th>
+                                    <th>Description</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for product in products %}
+                                    <tr>
+                                        <td>{{ product.name }}</td>
+                                        <td>{{ product.price }}</td>
+                                        <td>{{ product.description }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

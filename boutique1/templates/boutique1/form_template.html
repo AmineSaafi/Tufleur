@@ -1,0 +1,42 @@
+{% load staticfiles %}
+{% comment %}<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<link rel="stylesheet" href="{% static 'boutique1/jquery.mobile-1.4.5.min.css' %}">
+<script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="//code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>{% endcomment %}
+
+<div class="form-group">
+    {% for field in form %}
+
+        <div class="col-sm-offset-2 col-sm-10">
+            <span class="text-danger small">{{ field.errors }}</span>
+        </div>
+        <label class="control-label col-sm-2" for="song_title">{{ field.label_tag }}</label>
+        <div class="col-sm-10">{{ field }}</div>
+
+    {% endfor %}
+</div>
+<div class="form-group">
+    {% for field in form_img_one %}
+        <label class="control-label col-sm-2">Secondary pictures:</label><br><br>
+        <fieldset>
+            <label class="control-label col-sm-2" for="song_title">Secondary pic 1:</label>
+            <div class="col-sm-10">{{ field }}</div>
+        </fieldset>
+    {% endfor %}
+
+
+    {% for field in form_img_two %}
+        <fieldset>
+            <label class="control-label col-sm-2" for="song_title">Secondary pic 2:</label>
+            <div class="col-sm-10">{{ field }}</div>
+        </fieldset>
+    {% endfor %}
+
+
+    {% for field in form_img_three %}
+        <fieldset>
+            <label class="control-label col-sm-2" for="song_title">Secondary pic 3:</label>
+            <div class="col-sm-10">{{ field }}</div>
+        </fieldset>
+    {% endfor %}
+</div>

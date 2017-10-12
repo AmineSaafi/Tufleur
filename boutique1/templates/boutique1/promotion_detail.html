@@ -1,0 +1,556 @@
+{% extends 'boutique1/base.html' %}
+{% block title %}{{ prod }}{% endblock %}
+{% load staticfiles %}
+{% block body %}
+{% load mathfilters %}
+
+
+
+
+
+    <div class="container-fluid songs-container">
+        <div class="row">
+
+            <!-- Left Album Info -->
+            <div class="col-sm-4 col-md-3">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <a href="{% url 'boutique1:shopDetails' shop.id %}">
+                            {% if shop.logo %}
+                                <img src="{{ shop.logo.url }}" class="img-responsive"
+                                     style="width: 350px; height: 400px">
+                            {% else %}
+                                <h3>Image not found</h3>
+                            {% endif %}
+                        </a>
+                        <h1>{{ shop.name }} - {{ shop.owner.user.username }}</h1>
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Details:</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Owner:</td>
+                                <td>{{ shop.owner.user.username }}</td>
+                            </tr>
+                            <tr>
+                                <td>Shop name:</td>
+                                <td>{{ shop.name }}</td>
+                            </tr>
+                            <tr>
+                                <td>Description:</td>
+                                <td>{{ shop.description }}</td>
+                            </tr>
+                            <tr>
+                                <td>Address:</td>
+                                <td>{{ shop.address }}</td>
+                            </tr>
+                            <tr>
+                                <td>Create date:</td>
+                                <td>{{ shop.create_date }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Song Info -->
+            <div class="col-sm-8 col-md-9">
+
+                {#            <ul class="nav nav-pills" style="margin-bottom: 10px;">#}
+                {#                <li role="presentation"><a href="{% url 'eshop:detail' shop.id %}">Products</a></li>#}
+                {#                <li role="presentation" class="active"><a>Product details</a></li>#}
+                {#            </ul>#}
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+
+
+                        <div class="row">
+                            {% if prods %}
+
+                                <div class="col-sm-8 col-md-12">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+
+                                            {#                        {% if promotion.collection.picture %}#}
+                                            {#                            <img src="{{ prod.principal_picture.url }}" class="img-responsive center-block" width="300" height="300">#}
+                                            {##}
+                                            {#                            {% elif promotion.product.principal_picture %}#}
+                                            {#                             <img src="{{ promotion.product.principal_picture.url }}" class="popphoto center-block" width="330" height="330"></a>#}
+                                            {#                                <div data-role="popup" id="popupParis" data-overlay-theme="b" data-theme="b" data-corners="false">#}
+                                            {#                            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="{{ promotion.product.principal_picture.url }}" style="max-height:500px;" alt="Paris, France">#}
+                                            {#</div>#}
+                                            {##}
+                                            {##}
+                                            {#                         {% else %}#}
+                                            {#                            <img src="{%  static 'eshop/images/no-image.png' %}" class="img-responsive center-block" width="330" height="330">#}
+                                            {#                        {% endif %}#}
+
+                                            <h3>
+                                                <small>Promotion:</small>
+                                                {{ promotion.title }}</h3>
+                                            <h3>
+                                                <small>Discount:</small>
+                                                {{ promotion.discount_value }} %
+                                            </h3>
+                                            <h3>
+                                                <small>Start time:</small>
+                                                {{ promotion.start_time }}</h3>
+                                            <h3>
+                                                <small>End time:</small>
+                                                {{ promotion.end_time }}</h3>
+                                            {#                {% if request.user != promotion.shop.owner.user %}#}
+                                            {#                            <form action="{%  url 'messenger:newTo_message' promotion.product.id %}" method="" style="display: inline;">#}
+                                            {#                                        {% csrf_token %}#}
+                                            {##}
+                                            {#                                        <button type="submit" class="btn btn-default btn-xs">Contact Seller #}
+                                            {#                                            <span class="glyphicon glyphicon-envelope"></span>#}
+                                            {#                                        </button>#}
+                                            {#                                    </form>#}
+                                            {#                        {% endif %}#}
+                                            {% if request.user == promotion.shop.owner.user %}
+
+
+                                                <a href="{% url 'boutique1:edit_promotion' shop.id promotion.id %}"
+                                                   class="btn btn-default btn-sm" role="button">
+                                                    <span class="glyphicon glyphicon-edit"></span>
+                                                </a>
+
+                                                <a href="{% url 'boutique1:delete_promotion' shop.id promotion.id %}"
+                                                   class="btn btn-default btn-sm" role="button">
+                                                    <span class="glyphicon glyphicon-remove"></span>
+                                                </a>
+
+                                            {% endif %}
+                                        </div>
+                                        <div class="panel-body">
+                                            {% if promotion.promotion_for == 'PR' %}
+                                                <h2>Products</h2>
+                                                {% if error_message %}
+                                                    <p><strong>{{ error_message }}</strong></p>
+                                                {% endif %}
+                                                <table class="table">
+                                                    <thead>
+                                                    <td>
+
+                                                    </td>
+                                                    <tr>
+                                                        <th> </th>
+                                                        <th>Name</th>
+                                                        <th>Old Price</th>
+                                                        <th>New Price</th>
+                                                        <th>Description</th>
+                                                    </tr>
+                                                    </thead>
+
+
+                                                    <tbody>
+                                                    {% for prod in prods %}
+                                                        <tr>
+                                                            <th>
+                                                                <a href="{% url 'boutique1:prodDetails' shop.id prod.id %}">
+                                                                    {% if prod.principal_picture %}
+                                                                        <img src="{{ prod.principal_picture.url }}"
+                                                                             width="120" height="120">
+                                                                    {% else %}
+                                                                        <img src="{% static 'boutique1/images/no-image.jpg' %}"
+                                                                             width="120" height="120"></a>
+                                                                    {% endif %}
+                                                                </a>
+                                                            </th>
+                                                            <th><h3>{{ prod.name }}</h3></th>
+                                                            <th><h3>{{ prod.price }} $</h3></th>
+                                                            <th><h3>{{ prod.price|mul:promotion.discount_value|div:100 }} $</h3></th>
+                                                            <script>
+                                                                console.log("discount = {{promotion.discount_value}}")
+                                                                console.log("price = {{prod.price}}")
+
+                                                                console.log("new = {{prod.price|mul:promotion.discount_value|div:100|sub:prod.price|mul:-1|floatformat:-2}}")
+                                                            </script>
+                                                            <th><h3>{{ prod.description }}</h3></th>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            {% elif promotion.promotion_for == 'CO' %}
+                                                <h2>Collection's Products</h2>
+
+                                            {% endif %}
+
+                                        </div>
+                                    </div>
+                                    {% if prods.has_other_pages %}
+                                        <ul class="pagination">
+                                            {% if prods.has_previous %}
+                                                <li><a href="?page=
+
+
+                                                        {{ prods.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo;</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="disabled"><span>&laquo;</span></li>
+                                            {% endif %}
+                                            {% for i in prods.paginator.page_range %}
+                                                {% if prods.number == i %}
+                                                    <li class="active"><span>{{ i }} <span
+                                                            class="sr-only">(current)</span></span></li>
+                                                {% else %}
+                                                    <li><a href="?page=
+
+
+                                                            {{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a>
+                                                    </li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if prods.has_next %}
+                                                <li><a href="?page=
+
+
+                                                        {{ prods.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&raquo;</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="disabled"><span>&raquo;</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    {% endif %}
+
+                                </div>
+                            {% elif colls %}
+
+
+                                <div class="col-sm-8 col-md-8">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+
+
+                                            <h2>Collection</h2>
+
+
+                                            {% if error_message %}
+                                                <p><strong>{{ error_message }}</strong></p>
+                                            {% endif %}
+
+                                            <table class="table">
+                                                <thead>
+                                                <td>
+
+                                                </td>
+                                                <tr>
+                                                    <th> </th>
+                                                    <th>Name</th>
+                                                    <th>Description</th>
+                                                </tr>
+                                                </thead>
+
+
+                                                <tbody>
+                                                {% for coll in colls %}
+                                                    <tr>
+                                                        <th>
+                                                            <a href="{% url 'boutique1:collection_detail' shop.id coll.id %}">
+                                                                {% if coll.image_collection %}
+                                                                    <img src="{{ coll.image_collection.url }}"
+                                                                         width="120" height="120">
+                                                                {% else %}
+                                                                    <img src="{% static 'boutique1/images/no-image.jpg' %}"
+                                                                         width="120" height="120"></a>
+                                                                {% endif %}
+                                                            </a>
+                                                        </th>
+                                                        <th><h3>{{ coll.title }}</h3></th>
+                                                        <th><h3>{{ coll.description }} $</h3></th>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+
+
+                            {% endif %}
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{#<div class="container-fluid songs-container">#}
+{#<a class="col-sm-2 col-lg-4">#}
+{#    <a href="{% url 'promotion:promotions' shop.id %}"><h2>{{ user.username }}'s Shops</h2></a>#}
+{#</a>#}
+{##}
+{#</div>#}
+{##}
+{##}
+{# <div class="row">#}
+{#        <!-- Left Album Info -->#}
+{#        <div class="col-sm-8 col-lg-4">#}
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-body">#}
+{##}
+{#                        {% if promotion.collection.picture %}#}
+{#                            <img src="{{ prod.principal_picture.url }}" class="img-responsive center-block" width="300" height="300">#}
+{##}
+{#                            {% elif promotion.product.principal_picture %}#}
+{#                             <img src="{{ promotion.product.principal_picture.url }}" class="popphoto center-block" width="330" height="330"></a>#}
+{#                                <div data-role="popup" id="popupParis" data-overlay-theme="b" data-theme="b" data-corners="false">#}
+{#                            <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a><img class="popphoto" src="{{ promotion.product.principal_picture.url }}" style="max-height:500px;" alt="Paris, France">#}
+{#</div>#}
+{##}
+{##}
+{#                         {% else %}#}
+{#                            <img src="{%  static 'eshop/images/no-image.png' %}" class="img-responsive center-block" width="330" height="330">#}
+{#                        {% endif %}#}
+{##}
+{#                    <h2><small>Promotion:</small> {{ promotion.title }}</h2>#}
+{#                    <h2><small>Discount:</small> {{ promotion.discount }} %</h2>#}
+{#                    <h3><small>Start time:</small> {{ promotion.start_time }}</h3>#}
+{#                    <h3><small>End time:</small> {{ promotion.end_time }}</h3>#}
+{#                {% if request.user != promotion.shop.owner.user %}#}
+{#                            <form action="{%  url 'messenger:newTo_message' promotion.product.id %}" method="" style="display: inline;">#}
+{#                                        {% csrf_token %}#}
+{##}
+{#                                        <button type="submit" class="btn btn-default btn-xs">Contact Seller #}
+{#                                            <span class="glyphicon glyphicon-envelope"></span>#}
+{#                                        </button>#}
+{#                                    </form>#}
+{#                        {% endif %}#}
+{#                    {% if request.user == promotion.shop.owner.user %}#}
+{##}
+{##}
+{#                            <a href="{% url 'promotion:edit_promotion' shop.id promotion.id %}" class="btn btn-default btn-sm" role="button">#}
+{#                                <span class="glyphicon glyphicon-edit"></span>#}
+{#                            </a>#}
+{##}
+{#                         <a href="{% url 'promotion:delete_promotion' shop.id promotion.id %}" class="btn btn-default btn-sm" role="button">#}
+{#                                <span class="glyphicon glyphicon-remove"></span>#}
+{#                            </a>#}
+{##}
+{#                    {% endif %}#}
+{#                </div>#}
+{##}
+{#            </div>#}
+{#        </div>#}
+{##}
+{##}
+{#        <!-- Right Song Info -->#}
+{##}
+{#        <div class="col-sm-8 col-md-7 right">#}
+{##}
+{#            <ul class="nav nav-pills" style="margin-bottom: 10px;">#}
+{#                <li role="presentation" class="active"><a href="{% url 'eshop:detail' shop.id %}">View All</a></li>#}
+{#            </ul>#}
+{#    </div>#}
+{#      {% if prods %}#}
+{##}
+{#<div class="col-sm-8 col-md-8">#}
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-body">#}
+{##}
+{##}
+{#                    <h2>Products</h2>#}
+{##}
+{##}
+{#                    {% if error_message %}#}
+{#                        <p><strong>{{ error_message }}</strong></p>#}
+{#                    {% endif %}#}
+{##}
+{#                    <table class="table">#}
+{#                    <thead>#}
+{#                        <td>#}
+{##}
+{#                    </td>#}
+{#                    <tr>#}
+{#                        <th> </th>#}
+{#                        <th>Name</th>#}
+{#                        <th>Price</th>#}
+{#                        <th>Description</th>#}
+{#                    </tr>#}
+{#                        </thead>#}
+{##}
+{#                    #}
+{#                        <tbody>#}
+{#                        {% for prod in prods %}#}
+{#                        <tr>#}
+{#                            <th>#}
+{#                                <a href="{% url 'eshop:prod_detail' shop.id prod.id %}">#}
+{#                        {% if prod.principal_picture %}#}
+{#                            <img src="{{ prod.principal_picture.url }}" width="200" height="200">#}
+{#                        {% else %}#}
+{#                            <img src="{%  static 'eshop/images/no-image.png' %}" width="120" height="120"></a>#}
+{#                        {% endif %}#}
+{#                    </a>#}
+{#                            </th>#}
+{#                            <th><h3>{{ prod.name }}</h3></th>#}
+{#                            <th><h3>{{ prod.price }} $</h3></th>#}
+{#                            <th><h3>{{ prod.description }}</h3></th>#}
+{#                        </tr>#}
+{#                        {% endfor %}#}
+{#                        </tbody>#}
+{#                        <tbody>#}
+{#                        {% for prod in shop.product_set.all %}#}
+{#                            <tr>#}
+{#                                <td>{%  if prod.principal_picture %}#}
+{#                                    <img src="{{ prod.principal_picture.url }}" class="img-responsive" width="150" height="150">#}
+{#                                    {% endif %}#}
+{#                                </td>#}
+{#                                <td>{{ prod.name }}</td>#}
+{#                                <td>{{ prod.price }}$</td>#}
+{#                                <td>{{ prod.category }}</td>#}
+{#                                <td>{{ prod.description }}</td>#}
+{#                                <td>#}
+{#                                    <a href="{% url 'eshop:favorite' prod.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if prod.is_favorite %}active{% endif %}"></span></a>#}
+{#                                </td>#}
+{##}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+{#                        </tbody>#}
+{#                    </table>#}
+{##}
+{#                </div>#}
+{#            </div>#}
+{#{% if prods.has_other_pages %}#}
+{#      <ul class="pagination">#}
+{#        {% if prods.has_previous %}#}
+{#          <li><a href="?page={{ prods.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&laquo;</a></li>#}
+{#        {% else %}#}
+{#          <li class="disabled"><span>&laquo;</span></li>#}
+{#        {% endif %}#}
+{#        {% for i in prods.paginator.page_range %}#}
+{#          {% if prods.number == i %}#}
+{#            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>#}
+{#          {% else %}#}
+{#            <li><a href="?page={{ i }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">{{ i }}</a></li>#}
+{#          {% endif %}#}
+{#        {% endfor %}#}
+{#        {% if prods.has_next %}#}
+{#          <li><a href="?page={{ prods.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">&raquo;</a></li>#}
+{#        {% else %}#}
+{#          <li class="disabled"><span>&raquo;</span></li>#}
+{#        {% endif %}#}
+{#      </ul>#}
+{#    {% endif %}#}
+{##}
+{#        </div>#}
+{# {% elif colls %}#}
+{##}
+{##}
+{#<div class="col-sm-8 col-md-8">#}
+{#            <div class="panel panel-default">#}
+{#                <div class="panel-body">#}
+{##}
+{##}
+{#                    <h2>Collection</h2>#}
+{##}
+{##}
+{#                    {% if error_message %}#}
+{#                        <p><strong>{{ error_message }}</strong></p>#}
+{#                    {% endif %}#}
+{##}
+{#                    <table class="table">#}
+{#                    <thead>#}
+{#                        <td>#}
+{##}
+{#                    </td>#}
+{#                    <tr>#}
+{#                        <th> </th>#}
+{#                        <th>Name</th>#}
+{#                        <th>Description</th>#}
+{#                    </tr>#}
+{#                        </thead>#}
+{##}
+{##}
+{#                        <tbody>#}
+{#                        {% for coll in colls %}#}
+{#                        <tr>#}
+{#                            <th>#}
+{#                                <a href="{% url 'eshop:prod_detail' shop.id prod.id %}">#}
+{#                        {% if prod.principal_picture %}#}
+{#                            <img src="{{ prod.principal_picture.url }}" width="120" height="120">#}
+{#                        {% else %}#}
+{#                            <img src="{%  static 'eshop/images/no-image.png' %}" width="120" height="120"></a>#}
+{#                        {% endif %}#}
+{#                    </a>#}
+{#                            </th>#}
+{#                            <th><h3>{{ coll.title }}</h3></th>#}
+{#                            <th><h3>{{ coll.description }} $</h3></th>#}
+{#                        </tr>#}
+{#                        {% endfor %}#}
+{#                        </tbody>#}
+{#                        <tbody>#}
+{#                        {% for prod in shop.product_set.all %}#}
+{#                            <tr>#}
+{#                                <td>{%  if prod.principal_picture %}#}
+{#                                    <img src="{{ prod.principal_picture.url }}" class="img-responsive" width="150" height="150">#}
+{#                                    {% endif %}#}
+{#                                </td>#}
+{#                                <td>{{ prod.name }}</td>#}
+{#                                <td>{{ prod.price }}$</td>#}
+{#                                <td>{{ prod.category }}</td>#}
+{#                                <td>{{ prod.description }}</td>#}
+{#                                <td>#}
+{#                                    <a href="{% url 'eshop:favorite' prod.id %}" class="btn-favorite"><span class="glyphicon glyphicon-star {% if prod.is_favorite %}active{% endif %}"></span></a>#}
+{#                                </td>#}
+{##}
+{#                            </tr>#}
+{#                        {% endfor %}#}
+{#                        </tbody>#}
+{#                    </table>#}
+{##}
+{#                </div>#}
+{#            </div>#}
+{##}
+{#        </div>#}
+{##}
+{##}
+{##}
+{##}
+{##}
+{# {% endif %}#}
+{##}
+{#    </div>#}
+{##}
+{#{% endblock %}#}
